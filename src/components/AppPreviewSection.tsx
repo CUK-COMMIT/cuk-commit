@@ -2,7 +2,17 @@ import { Button } from "@/components/ui/button";
 import { Download, Heart, MessageCircle, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+
 const apkUrl = new URL("../assets/cukCommit.apk", import.meta.url).href;
+
+
+
+<img
+  src="/android-logo.png"
+  alt="Android"
+  className="w-5 h-5 ml-2 inline-block"
+/>
+
 
 const AppPreviewSection = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -30,7 +40,7 @@ const AppPreviewSection = () => {
   }, []);
 
   return (
-    <section className="py-24 bg-background overflow-hidden">
+    <section  id = "app-preview" className="py-24 bg-background overflow-hidden">
       <div className="container mx-auto px-6">
         {/* Heading */}
         <div className="text-center mb-16">
@@ -136,12 +146,26 @@ const AppPreviewSection = () => {
               </li>
             </ul>
 
-            <a href={apkUrl} download className="inline-block">
-              <Button variant="hero" size="lg">
-                <Download className="w-5 h-5" />
-                Get the App
-              </Button>
-            </a>
+            <div className="flex flex-col items-center lg:items-start gap-3">
+              <a href={apkUrl} download className="inline-block">
+                <Button variant="hero" size="lg" className="gap-1 group">
+                   <img
+                  src="/android-logo.png"
+                  alt="Android"
+                  className="w-7 h-7 ml-2 filter brightness-0 invert"
+                  />
+
+                  Get the App
+                 
+
+                </Button>
+              </a>
+              
+              <p className="text-xs md:text-sm text-muted-foreground italic">
+                iOS app currently under development. Coming soon.
+              </p>
+            </div>
+
           </div>
         </div>
       </div>

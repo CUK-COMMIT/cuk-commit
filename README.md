@@ -64,6 +64,40 @@ This project is built with:
 
 Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
 
+## Deploy to Vercel
+
+This project is a Vite + React app. Vercel can deploy it easily. The repo includes a minimal `vercel.json` that tells Vercel to run the build and serve the `dist` folder.
+
+Two common ways to deploy:
+
+- Web UI (recommended):
+	1. Go to https://vercel.com and sign in with GitHub/GitLab/Bitbucket.
+	2. Click "New Project" → Import your repository.
+	3. Vercel usually detects Vite. If asked, set the Build Command to `npm run build` and the Output Directory to `dist`.
+	4. Deploy. Subsequent pushes to the selected branch will trigger automatic deployments.
+
+- CLI (quick test / preview):
+	1. Install the Vercel CLI globally (requires Node/npm):
+
+```powershell
+npm install -g vercel
+```
+
+	2. Login and deploy from your project folder:
+
+```powershell
+cd 'd:\1.Projects\Web\CUK_COMMIT'
+vercel login
+vercel --prod
+```
+
+The CLI will detect `package.json` scripts and use `npm run build` by default. If you prefer, you can also run `npm run build` locally and then `vercel --confirm --prod` to deploy the built `dist` folder.
+
+Notes:
+
+- No special environment variables are required by default. If your app needs secrets (APIs, keys), add them in the Vercel dashboard under Project Settings → Environment Variables.
+- The included `vercel.json` is minimal and safe for most static Vite apps. If you need rewrites or custom routes, add them to this file.
+
 ## Can I connect a custom domain to my Lovable project?
 
 Yes, you can!

@@ -160,7 +160,7 @@ const FeatureCard = ({
             : "opacity-0 translate-y-10 scale-95"
         }
       `}
-      style={{ transitionDelay: `${index * 120}ms` }}
+      style={{ transitionDelay: `${20}ms` }}
     >
       {/* Gradient overlay */}
       <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/40 via-transparent to-white/10 dark:from-white/5 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />

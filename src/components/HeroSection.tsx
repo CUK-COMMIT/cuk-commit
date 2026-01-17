@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Heart, Download } from "lucide-react";
+// import { Heart, Download } from "lucide-react";
 import FloatingHearts from "./FloatingHearts";
 import valentineBg from "@/assets/valentine-hero-bg.jpg";
+import { Link } from "react-router-dom";
 
 // Build a URL for the APK asset so TypeScript won't require a custom module declaration
 const apkUrl = new URL("../assets/cukCommit.apk", import.meta.url).href;
@@ -48,16 +49,33 @@ const HeroSection = () => {
           </p>
           
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up-delayed animate-bounce" style={{ animationDelay: "0.4s" }}>
-              <a href={apkUrl} download className="inline-block pulse-btn" aria-label="Download CUK Commit APK">
+          {/* <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up-delayed animate-bounce" style={{ animationDelay: "0.4s" }}>
+              <a href="" download className="inline-block pulse-btn" aria-label="Download CUK Commit APK">
               <Button variant="hero" size="xl">
-                <Download className="w-5 h-5" />
-                Download the App
+              <Download className="w-5 h-5" />
+              Download the App
               </Button>
-            </a>
+              </a> */}
             {/* <Button variant="soft" size="lg">
               Learn More
-            </Button> */}
+              </Button> */}
+
+          {/* CTA Buttons */}
+          <div
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up-delayed animate-bounce"
+            style={{ animationDelay: "0.4s" }}
+          >
+            <Button
+              variant="hero"
+              size="xl"
+              onClick={() => {
+                document
+                  .getElementById("app-preview")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Download the App
+            </Button>
           </div>
         </div>
         
