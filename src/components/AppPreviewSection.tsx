@@ -1,3 +1,4 @@
+import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Download, Heart, MessageCircle, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -31,17 +32,30 @@ const AppPreviewSection = () => {
     return () => observer.disconnect();
   }, []);
 
-  // 🔁 LOAD SAVED DOWNLOAD COUNT
+  // ✅ STEP 9: LOAD GLOBAL COUNT
   useEffect(() => {
-    const saved = localStorage.getItem("cuk-downloads");
-    if (saved) setDownloads(parseInt(saved));
+    const loadCount = async () => {
+      const { data, error } = await supabase
+        .from("downloads")
+        .select("count")
+        .eq("id", "apk")
+        .single();
+
+      if (!error && data) {
+        setDownloads(data.count);
+      }
+    };
+
+    loadCount();
   }, []);
 
-  // ➕ HANDLE DOWNLOAD CLICK
-  const handleDownload = () => {
-    const newCount = downloads + 1;
-    setDownloads(newCount);
-    localStorage.setItem("cuk-downloads", newCount.toString());
+  // ✅ STEP 9: INCREMENT ON DOWNLOAD CLICK
+  const handleDownload = async () => {
+    const { data, error } = await supabase.rpc("increment_download");
+
+    if (!error && data !== null) {
+      setDownloads(data);
+    }
   };
 
   return (
@@ -149,12 +163,8 @@ const AppPreviewSection = () => {
             </ul>
 
             <div className="flex flex-col items-center lg:items-start gap-3">
-              <a
-                href={apkUrl}
-                download
-                className="inline-block"
-                onClick={handleDownload}
-              >
+              {/* ✅ STEP 9: ATTACH HANDLER */}
+              <a href={apkUrl} download className="inline-block" onClick={handleDownload}>
                 <Button variant="hero" size="lg" className="gap-1 group">
                   <img
                     src="/android-logo.png"
@@ -165,14 +175,14 @@ const AppPreviewSection = () => {
                 </Button>
               </a>
 
-              {/* 🔢 DOWNLOAD COUNTER */}
+              {/* ✅ STEP 9: SHOW COUNTER UI */}
               <p className="text-sm text-muted-foreground flex items-center gap-2">
                 <Download className="w-4 h-4 text-lavender-dark" />
                 <span>
                   <span className="font-semibold text-foreground">
                     {downloads}
                   </span>{" "}
-                  Downloads
+                  downloads
                 </span>
               </p>
 
