@@ -105,7 +105,7 @@ Prerequisites: Node.js (16+ recommended) and npm or pnpm.
 1) Clone the repo
 
 ```powershell
-git clone <your-repo-url>
+git clone <https://github.com/CUK-COMMIT/cuk-commit>
 cd CUK_COMMIT
 ```
 
