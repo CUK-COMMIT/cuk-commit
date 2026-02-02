@@ -2,28 +2,20 @@ import { Button } from "@/components/ui/button";
 import { Download, Heart, MessageCircle, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-
 const apkUrl = new URL("../assets/cukCommit.apk", import.meta.url).href;
-
-
-
-<img
-  src="/android-logo.png"
-  alt="Android"
-  className="w-5 h-5 ml-2 inline-block"
-/>
-
 
 const AppPreviewSection = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [open, setOpen] = useState(false);
+
+  // 🔢 DOWNLOAD COUNTER STATE
+  const [downloads, setDownloads] = useState<number>(0);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // OPEN early, CLOSE late → no flicker
         if (entry.intersectionRatio > 0.35) {
           setOpen(true);
         } else if (entry.intersectionRatio < 0.15) {
@@ -39,14 +31,26 @@ const AppPreviewSection = () => {
     return () => observer.disconnect();
   }, []);
 
+  // 🔁 LOAD SAVED DOWNLOAD COUNT
+  useEffect(() => {
+    const saved = localStorage.getItem("cuk-downloads");
+    if (saved) setDownloads(parseInt(saved));
+  }, []);
+
+  // ➕ HANDLE DOWNLOAD CLICK
+  const handleDownload = () => {
+    const newCount = downloads + 1;
+    setDownloads(newCount);
+    localStorage.setItem("cuk-downloads", newCount.toString());
+  };
+
   return (
-    <section  id = "app-preview" className="py-24 bg-background overflow-hidden">
+    <section id="app-preview" className="py-24 bg-background overflow-hidden">
       <div className="container mx-auto px-6">
         {/* Heading */}
         <div className="text-center mb-16">
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Experience {""}
-            <span className="text-gradient-strong">CUK COMMIT</span>{" "} 
+            Experience <span className="text-gradient-strong">CUK COMMIT</span>
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto">
             A beautiful app designed for meaningful connections
@@ -54,7 +58,6 @@ const AppPreviewSection = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row items-center justify-center gap-12 max-w-5xl mx-auto">
-          
           {/* PHONE PREVIEW */}
           <div
             ref={containerRef}
@@ -62,7 +65,6 @@ const AppPreviewSection = () => {
               open ? "animate-open" : ""
             }`}
           >
-            {/* Background glow */}
             <div className="absolute inset-0 bg-lavender-light/50 blur-3xl rounded-full scale-150" />
 
             {/* CENTER PHONE */}
@@ -147,25 +149,37 @@ const AppPreviewSection = () => {
             </ul>
 
             <div className="flex flex-col items-center lg:items-start gap-3">
-              <a href={apkUrl} download className="inline-block">
+              <a
+                href={apkUrl}
+                download
+                className="inline-block"
+                onClick={handleDownload}
+              >
                 <Button variant="hero" size="lg" className="gap-1 group">
-                   <img
-                  src="/android-logo.png"
-                  alt="Android"
-                  className="w-7 h-7 ml-2 filter brightness-0 invert"
+                  <img
+                    src="/android-logo.png"
+                    alt="Android"
+                    className="w-7 h-7 ml-2 filter brightness-0 invert"
                   />
-
                   Get the App
-                 
-
                 </Button>
               </a>
-              
+
+              {/* 🔢 DOWNLOAD COUNTER */}
+              <p className="text-sm text-muted-foreground flex items-center gap-2">
+                <Download className="w-4 h-4 text-lavender-dark" />
+                <span>
+                  <span className="font-semibold text-foreground">
+                    {downloads}
+                  </span>{" "}
+                  Downloads
+                </span>
+              </p>
+
               <p className="text-xs md:text-sm text-muted-foreground italic">
                 iOS app currently under development. Coming soon.
               </p>
             </div>
-
           </div>
         </div>
       </div>
