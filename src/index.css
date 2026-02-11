@@ -323,39 +323,19 @@ html {
   animation-delay: 0.12s;
 }
 
-/* KEYFRAMES */
-@keyframes phoneCenter {
+@keyframes scroll-left {
   0% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  80% {
-    transform: scale(1.05);
+    transform: translateX(0);
   }
   100% {
-    opacity: 1;
-    transform: scale(1);
+    transform: translateX(-50%);
   }
 }
 
-@keyframes phoneLeft {
-  from {
-    opacity: 0;
-    transform: translateX(0) rotate(0deg) scale(0.9);
-  }
-  to {
-    opacity: 0.6;
-    transform: translateX(-80px) rotate(-12deg) scale(0.9);
-  }
+.animate-scroll-left {
+  animation: scroll-left 15s linear infinite;
 }
 
-@keyframes phoneRight {
-  from {
-    opacity: 0;
-    transform: translateX(0) rotate(0deg) scale(0.9);
-  }
-  to {
-    opacity: 0.6;
-    transform: translateX(80px) rotate(12deg) scale(0.9);
-  }
+.animate-scroll-left:hover {
+  animation-play-state: paused;
 }
