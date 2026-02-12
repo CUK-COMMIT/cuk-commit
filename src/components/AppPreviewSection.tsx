@@ -1,7 +1,8 @@
-import { supabase } from "@/lib/supabase";
+import getSupabase from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Download, Heart, MessageCircle, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { set } from "date-fns";
 
 const apkUrl =
   "https://github.com/CUK-COMMIT/cukcommit-downloads/releases/download/releases/cuk-commitv1.2.89.apk";
@@ -10,7 +11,7 @@ const AppPreviewSection = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [open, setOpen] = useState(false);
 
-  // 🔢 DOWNLOAD COUNTER STATE
+  // DOWNLOAD COUNTER STATE
   const [downloads, setDownloads] = useState<number>(0);
 
   useEffect(() => {
@@ -33,29 +34,63 @@ const AppPreviewSection = () => {
     return () => observer.disconnect();
   }, []);
 
-  // ✅ STEP 9: LOAD GLOBAL COUNT
+  // STEP 9: LOAD GLOBAL COUNT
   useEffect(() => {
     const loadCount = async () => {
-      const { data, error } = await supabase
-        .from("downloads")
-        .select("count")
-        .eq("id", "apk")
-        .single();
+      const client = getSupabase();
+      if (!client) {
+        console.warn("Supabase client unavailable — skipping download count load.");
+        return;
+      }
 
-      if (!error && data) {
-        setDownloads(data.count);
+      try {
+        const { data, error } = await client
+          .from("downloads")
+          .select("count")
+          .eq("id", "apk")
+          .single();
+
+        if (error) {
+          console.error("Failed to load downloads count:", error);
+          return;
+          setDownloads(0); // Optionally set to 0 on error`
+        }
+
+        if (data && typeof data.count === "number") {
+          setDownloads(data.count);
+        }
+      } catch (err) {
+        console.error("Unexpected error loading download count:", err);
       }
     };
 
     loadCount();
   }, []);
 
-  // ✅ STEP 9: INCREMENT ON DOWNLOAD CLICK
+  // STEP 9: INCREMENT ON DOWNLOAD CLICK
   const handleDownload = async () => {
-    const { data, error } = await supabase.rpc("increment_download");
+    const client = getSupabase();
+    if (!client) {
+      console.warn("Supabase client unavailable — cannot increment download count.");
+      return;
+    }
 
-    if (!error && data !== null) {
-      setDownloads(data);
+    try {
+      const { data, error } = await client.rpc("increment_download");
+
+      if (error) {
+        console.error("Failed to increment download count:", error);
+        return;
+      }
+
+      // `data` may be the new count or an object depending on RPC definition
+      if (typeof data === "number") {
+        setDownloads(data);
+      } else if (data && (data as any).count != null) {
+        setDownloads((data as any).count);
+      }
+    } catch (err) {
+      console.error("Unexpected error incrementing download count:", err);
     }
   };
 
@@ -164,7 +199,7 @@ const AppPreviewSection = () => {
             </ul>
 
             <div className="flex flex-col items-center lg:items-start gap-3">
-              {/* ✅ STEP 9: ATTACH HANDLER */}
+              {/* STEP 9: ATTACH HANDLER */}
               <a href={apkUrl} download className="inline-block" onClick={handleDownload}>
                 <Button variant="hero" size="lg" className="gap-1 group">
                   <img
@@ -176,7 +211,7 @@ const AppPreviewSection = () => {
                 </Button>
               </a>
 
-              {/* ✅ STEP 9: SHOW COUNTER UI */}
+              {/* STEP 9: SHOW COUNTER UI */}
               <p className="text-sm text-muted-foreground flex items-center gap-2">
                 <Download className="w-4 h-4 text-lavender-dark" />
                 <span>
